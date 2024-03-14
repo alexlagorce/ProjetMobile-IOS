@@ -6,6 +6,8 @@ struct LoginView: View {
     @State private var showAlert = false 
     @State private var alertMessage = ""
     
+    @AppStorage("loggedIn") var loggedIn: Bool = false
+    
     
     func loginUser() {
         guard let url = URL(string: "https://montpellier-game-fest-volunteers-api-vincentdub2.vercel.app/login") else {
@@ -42,6 +44,7 @@ struct LoginView: View {
             if (200..<300).contains(httpResponse.statusCode) {
                 // Connexion réussie, vous pouvez rediriger l'utilisateur ou effectuer d'autres actions ici
                 print("User successfully logged in")
+                self.loggedIn = true
             } else {
                 // Gérer les erreurs de connexion
                 alertMessage = "Error: \(httpResponse.statusCode)"

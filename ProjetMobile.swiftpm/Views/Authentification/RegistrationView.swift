@@ -68,7 +68,7 @@ struct RegistrationView: View {
                 .padding(.vertical, 32)
             
             // form fiels
-            VStack(spacing: 24){
+            VStack(spacing: 20){
                 InputView(text: $email, title: "Email Adress", placeholder: "name@example.com")
                     .autocapitalization(.none)
                 
@@ -83,7 +83,7 @@ struct RegistrationView: View {
                 InputView(text: $confirmPassword, title: "Confirm Password", placeholder: "Confirm your password", isSecureField: true)
             }
             .padding(.horizontal)
-            .padding(.top, 12)
+            .padding(.top, 0)
             
             // sign in button
             
@@ -100,7 +100,7 @@ struct RegistrationView: View {
             }
             .background(Color(.systemBlue))
             .cornerRadius(10)
-            .padding(.top, 24)
+            .padding(.top, 2)
             
             Spacer()
             
@@ -113,6 +113,7 @@ struct RegistrationView: View {
                         .fontWeight(.bold)
                 }
                 .font(.system(size: 14))
+                .padding(.bottom, 7)
             }
         }
         .alert(isPresented: $showingSuccessAlert) {
