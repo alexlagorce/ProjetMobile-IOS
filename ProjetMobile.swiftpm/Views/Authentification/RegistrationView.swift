@@ -61,7 +61,7 @@ struct RegistrationView: View {
     var body: some View {
         VStack{
             //image
-            Image("rock-n-solex")
+            Image("festival-du-jeu")
                 .resizable()
                 .scaledToFill()
                 .frame(width: 100, height: 120)

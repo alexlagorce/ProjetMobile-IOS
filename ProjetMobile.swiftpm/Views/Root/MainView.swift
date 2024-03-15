@@ -6,7 +6,7 @@ struct MainView: View {
     var body: some View {
         VStack {
             if !loggedIn{
-                RegistrationView()
+                LoginView()
             } else {
                 LoggedInView(isLoggedIn: $loggedIn)
             }

@@ -1,9 +1,10 @@
 import SwiftUI
 
-struct EmptyView: View {
+struct ProfileView: View {
     var body: some View {
         VStack {
-            LoadingView()
+            Text("Profile view")
         }
     }
 }
+

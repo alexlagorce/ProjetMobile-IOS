@@ -57,7 +57,7 @@ struct LoginView: View {
         NavigationStack{
             VStack{
                 //image
-                Image("rock-n-solex")
+                Image("festival-du-jeu")
                     .resizable()
                     .scaledToFill()
                     .frame(width: 100, height: 120)
