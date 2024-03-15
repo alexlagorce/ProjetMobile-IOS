@@ -6,14 +6,13 @@ struct LoggedInView: View {
     var body: some View {
         NavigationView {
             TabView {
+                DashboardView()
+                    .tabItem {
+                        Label("Dashboard", systemImage: "square.grid.2x2")
+                    }
                 ProfileView()
                     .tabItem {
                         Label("Profile", systemImage: "person")
-                    }
-                
-                DashboardView()
-                    .tabItem {
-                        Label("Empty", systemImage: "square.grid.2x2")
                     }
             }
             .navigationBarTitle("Acceuil", displayMode: .inline)

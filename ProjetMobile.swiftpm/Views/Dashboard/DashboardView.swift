@@ -2,27 +2,25 @@ import SwiftUI
 
 struct DashboardView: View {
     @ObservedObject var viewModel = FestivalViewModel()
+    @State private var selectedFestival: Festival? // Pour stocker le festival sélectionné
     
     var body: some View {
         NavigationView {
-            List(viewModel.festivals) { festival in
-                VStack(alignment: .leading) {
-                    Text(festival.name)
-                        .font(.headline)
-                    Text("Date: \(formattedDate(festival.dateDebut)) - \(formattedDate(festival.dateFin))")
-                        .font(.subheadline)
+            VStack {
+                List(viewModel.festivals) { festival in
+                    FestivalRowView(festival: festival)
+                        .onTapGesture {
+                            selectedFestival = festival // Sélectionner le festival lorsqu'il est tapé
+                        }
                 }
-            }
-            .navigationTitle("Dashboard")
-            .onAppear {
-                viewModel.fetchFestivals()
+                .navigationTitle("Liste des festivals")
             }
         }
-    }
-    
-    private func formattedDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        return formatter.string(from: date)
+        .sheet(item: $selectedFestival) { festival in
+            RegistrationFestivalView(festival: festival)
+        }
+        .onAppear {
+            viewModel.fetchFestivals()
+        }
     }
 }
