@@ -42,15 +42,24 @@ struct LoginView: View {
             }
             
             if (200..<300).contains(httpResponse.statusCode) {
-                // Connexion réussie, vous pouvez rediriger l'utilisateur ou effectuer d'autres actions ici
-                print("User successfully logged in")
-                self.loggedIn = true
+                do {
+                    let tokenResponse = try JSONDecoder().decode(TokenResponse.self, from: data!)
+                    UserDefaults.standard.set(tokenResponse.token, forKey: "userToken")
+                    print("User successfully logged in with token: \(tokenResponse.token)")
+                    self.loggedIn = true
+                } catch {
+                    alertMessage = "Failed to decode token"
+                    showAlert = true
+                }
             } else {
-                // Gérer les erreurs de connexion
                 alertMessage = "Error: \(httpResponse.statusCode)"
                 showAlert = true
             }
         }.resume()
+    }
+    
+    struct TokenResponse: Codable{
+        let token: String
     }
     
     var body: some View {

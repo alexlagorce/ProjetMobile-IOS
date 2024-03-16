@@ -5,14 +5,14 @@ struct User: Codable, Identifiable{
     var lastName: String?
     var firstName: String
     var email: String
-    var adress: String?
+    var address: String?
     
-    init(){
-        self.id = ""
-        self.lastName = ""
-        self.firstName = ""
-        self.email = ""
-        self.adress = ""
+    init(id: String, lastName: String?, firstName: String, email: String, address: String?){
+        self.id = id
+        self.lastName = lastName
+        self.firstName = firstName
+        self.email = email
+        self.address = address
     }
     
     private enum CodingKeys: String, CodingKey{
@@ -20,7 +20,13 @@ struct User: Codable, Identifiable{
         case lastName
         case firstName
         case email
-        case adress
+        case address
+    }
+}
+
+extension User: Equatable {
+    static func == (lhs: User, rhs: User) -> Bool {
+        return lhs.id == rhs.id && lhs.lastName == rhs.lastName && lhs.firstName == rhs.firstName && lhs.email == rhs.email && lhs.address == rhs.address
     }
 }
 
