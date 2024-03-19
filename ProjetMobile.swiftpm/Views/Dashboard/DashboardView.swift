@@ -2,8 +2,11 @@ import SwiftUI
 
 struct DashboardView: View {
     @ObservedObject var viewModel = FestivalViewModel()
-    @State private var selectedFestival: Festival? // Pour stocker le festival sélectionné
+    @ObservedObject var userViewModel = UserViewModel()
+    @ObservedObject var registrationViewModel = RegistrationViewModel()
     
+    @State private var selectedFestival: Festival? // Pour stocker le festival sélectionné
+
     var body: some View {
         NavigationView {
             VStack {
@@ -17,7 +20,7 @@ struct DashboardView: View {
             }
         }
         .sheet(item: $selectedFestival) { festival in
-            RegistrationFestivalView(festival: festival)
+            RegistrationFestivalView(festival: festival, registrationViewModel: registrationViewModel)
         }
         .onAppear {
             viewModel.fetchFestivals()

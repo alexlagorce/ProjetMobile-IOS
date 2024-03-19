@@ -2,13 +2,12 @@ import SwiftUI
 
 struct RegistrationFestivalView: View {
     var festival: Festival
+    @ObservedObject var userViewModel = UserViewModel()
+    @ObservedObject var registrationViewModel: RegistrationViewModel
     
-    // Variables de liaison pour les informations personnelles
     @State private var tshirtSize = ""
     @State private var isVegetarian = false
-    
-    // Variables de liaison pour les choix de poste
-    // Ajoutez ici les variables pour les choix de poste
+    @State private var registrationSuccess = false // État pour contrôler l'affichage du message de succès
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -16,12 +15,11 @@ struct RegistrationFestivalView: View {
                 .font(.title)
                 .padding(.bottom, 10)
             
-            // Section des informations personnelles
+            // Informations personnelles
             VStack(alignment: .leading) {
                 Text("Informations personnelles")
                     .font(.headline)
                 
-                // Ajoutez ici les champs pour les informations personnelles
                 TextField("Taille T-shirt", text: $tshirtSize)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.bottom, 10)
@@ -30,19 +28,22 @@ struct RegistrationFestivalView: View {
             }
             .padding(.bottom, 20)
             
-            // Section des choix de poste
-            VStack(alignment: .leading) {
-                Text("Choix des postes")
-                    .font(.headline)
-                
-                // Ajoutez ici les choix de poste
-            }
-            
             Spacer()
             
             // Bouton de soumission
-            Button(action: submitRegistration) {
-                Text("S'inscrire")
+            Button(action: {
+                guard let currentUserID = userViewModel.user?.id else {
+                    // Gérer le cas où l'ID de l'utilisateur actuel n'est pas disponible
+                    print("ID utilisateur non trouvé")
+                    return
+                }
+                
+                registrationViewModel.submitRegistration(userID: currentUserID, festivalID: String(festival.id), tshirtSize: tshirtSize, isVegetarian: isVegetarian)
+                
+                // Mettre à jour l'état registrationSuccess pour afficher le message de succès
+                registrationSuccess = true
+            }) {
+                Text("Inscription")
                     .padding()
                     .frame(maxWidth: .infinity)
                     .foregroundColor(.white)
@@ -50,19 +51,27 @@ struct RegistrationFestivalView: View {
                     .cornerRadius(10)
             }
             .padding(.bottom)
+            
+            // Afficher le message de succès si registrationSuccess est vrai
+            if registrationSuccess {
+                Text("Inscription réussie au festival \(festival.name) !")
+                    .foregroundColor(.green)
+                    .padding(.bottom)
+            }
         }
         .padding()
-    }
-    
-    // Fonction pour soumettre le formulaire d'inscription
-    func submitRegistration() {
-        // Ajouter la logique pour soumettre les données d'inscription
-        // Par exemple, vous pouvez envoyer les données au serveur ici
-        print("Inscription soumise pour \(festival.name)")
-        print("Taille du t-shirt: \(tshirtSize)")
-        print("Végétarien: \(isVegetarian)")
+        .onAppear {
+            // Récupérer les informations de l'utilisateur actuel
+            userViewModel.fetchCurrentUser()
+        }
     }
 }
-    
+
+struct RegistrationData {
+    var userID: String
+    var festivalID: String
+    var tshirtSize: String
+    var isVegetarian: Bool
+}
 
 
