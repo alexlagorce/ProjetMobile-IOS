@@ -4,7 +4,7 @@ struct DashboardView: View {
     @ObservedObject var viewModel = FestivalViewModel()
     @ObservedObject var userViewModel = UserViewModel()
     @ObservedObject var registrationViewModel = RegistrationViewModel()
-    
+
     @State private var selectedFestival: Festival? // Pour stocker le festival sélectionné
 
     var body: some View {

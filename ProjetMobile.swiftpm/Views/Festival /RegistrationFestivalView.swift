@@ -4,10 +4,12 @@ struct RegistrationFestivalView: View {
     var festival: Festival
     @ObservedObject var userViewModel = UserViewModel()
     @ObservedObject var registrationViewModel: RegistrationViewModel
+    @ObservedObject var posteViewModel = PosteViewModel()
+    @ObservedObject var creneauViewModel = CreneauViewModel()
     
     @State private var tshirtSize = ""
     @State private var isVegetarian = false
-    @State private var registrationSuccess = false // État pour contrôler l'affichage du message de succès
+    @State private var registrationSuccess = false 
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -28,7 +30,51 @@ struct RegistrationFestivalView: View {
             }
             .padding(.bottom, 20)
             
-            Spacer()
+            VStack(alignment: .leading) {
+                Text("Choix des postes")
+                    .font(.headline)
+                
+                if let postes = posteViewModel.postes {
+                    ForEach(postes) { poste in
+                        VStack(alignment: .leading) {
+                            Text(poste.name)
+                                .font(.headline)
+                            
+                            Text(poste.description)
+                                .font(.subheadline)
+                            
+                            Text("Capacité: \(poste.capacityPoste)")
+                                .font(.subheadline)
+                        }
+                        .padding(.vertical, 8)
+                    }
+                } else {
+                    ProgressView()
+                }
+            }
+            .padding(.bottom, 20)
+            
+            // Section des créneaux
+            VStack(alignment: .leading) {
+                Text("Choix des créneaux")
+                    .font(.headline)
+                
+                if let creneaux = creneauViewModel.creneaux {
+                    ForEach(creneaux) { creneau in
+                        VStack(alignment: .leading) {
+                            Text("Début: \(creneau.timeStart)")
+                                .font(.subheadline)
+                            
+                            Text("Fin: \(creneau.timeEnd)")
+                                .font(.subheadline)
+                        }
+                        .padding(.vertical, 8)
+                    }
+                } else {
+                    ProgressView()
+                }
+            }
+            .padding(.bottom, 20)
             
             // Bouton de soumission
             Button(action: {
@@ -43,7 +89,7 @@ struct RegistrationFestivalView: View {
                 // Mettre à jour l'état registrationSuccess pour afficher le message de succès
                 registrationSuccess = true
             }) {
-                Text("Inscription")
+                Text("S'inscrire")
                     .padding()
                     .frame(maxWidth: .infinity)
                     .foregroundColor(.white)
@@ -61,7 +107,8 @@ struct RegistrationFestivalView: View {
         }
         .padding()
         .onAppear {
-            // Récupérer les informations de l'utilisateur actuel
+            posteViewModel.fetchPostes(for: festival.id)
+            creneauViewModel.fetchCreneaux(for: festival.id)
             userViewModel.fetchCurrentUser()
         }
     }
