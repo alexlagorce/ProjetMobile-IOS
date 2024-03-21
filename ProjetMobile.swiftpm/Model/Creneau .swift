@@ -18,7 +18,32 @@ struct CreneauEspace: Codable {
     var idEspace: Int
     var currentCapacity: Int
     var capacityEspaceAnimationJeux: Int
+    var espace: Espace 
     
     // CodingKeys si nécessaire
 }
 
+struct Espace: Codable{
+    var idEspace: Int
+    var name: String
+    var posteEspaces: [PosteEspace]
+}
+
+struct PosteEspace: Codable{
+    var idPoste: Int
+    var idEspace: Int
+}
+
+//pas utilisé encore 
+struct Inscription: Codable{
+    var idUser: Int
+    var idCreneauEspace: Int
+    var isAccepted: Bool
+    var isFlexible: Bool
+}
+
+struct IsReferent: Codable{
+    var idUser: Int
+    var idEspace: Int
+    var jeuxIdGame: Int
+}
