@@ -11,9 +11,14 @@ class CreneauViewModel: ObservableObject {
             return
         }
         
+        print("Fetching creneaux for festival ID:", festivalId) // Message de débogage
+        
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(DateFormatter.iso8601Full) // Utilise une DateFormatter personnalisée
+        
         URLSession.shared.dataTaskPublisher(for: url)
             .map { $0.data }
-            .decode(type: [Creneau].self, decoder: JSONDecoder())
+            .decode(type: [Creneau].self, decoder: decoder)
             .replaceError(with: [])
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] creneaux in
@@ -21,7 +26,5 @@ class CreneauViewModel: ObservableObject {
                 self?.creneaux = creneaux
             })
             .store(in: &cancellables)
-        
-        print("Fetching creneaux for festival ID:", festivalId) // Ajouter un print pour vérifier l'ID du festival
     }
 }
