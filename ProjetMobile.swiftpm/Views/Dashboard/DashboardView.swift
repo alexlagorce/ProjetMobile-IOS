@@ -9,14 +9,21 @@ struct DashboardView: View {
 
     var body: some View {
         NavigationView {
-            VStack {
+            VStack{
+                Text("Liste des festivals")
+                    .padding(.top, 10)
+                    .font(.title)
+                    .padding(.bottom, 10)
+                    .bold()
+                    .padding(.top, 10)
+                    .foregroundColor(.gray)
                 List(viewModel.festivals) { festival in
                     FestivalRowView(festival: festival)
                         .onTapGesture {
                             selectedFestival = festival // Sélectionner le festival lorsqu'il est tapé
                         }
                 }
-                .navigationTitle("Liste des festivals")
+                
             }
         }
         .sheet(item: $selectedFestival) { festival in

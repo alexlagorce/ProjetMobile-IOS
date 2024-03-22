@@ -1,14 +1,30 @@
 import SwiftUI
 
+import Foundation
+
 struct Creneau: Codable, Identifiable {
     var id: Int
     var timeStart: Date
     var timeEnd: Date
     var idFestival: Int
-    var creneauEspace: [CreneauEspace] 
+    var creneauEspace: [CreneauEspace]
     
     private enum CodingKeys: String, CodingKey {
         case id = "idCreneau", timeStart, timeEnd, idFestival, creneauEspace
+    }
+}
+
+struct CreneauxByDay {
+    let day: Date
+    let creneaux: [Creneau]
+}
+
+func groupCreneauxByDay(creneaux: [Creneau]) -> [CreneauxByDay] {
+    let groupedCreneaux = Dictionary(grouping: creneaux) { creneau in
+        Calendar.current.startOfDay(for: creneau.timeStart)
+    }
+    return groupedCreneaux.map { key, value in
+        CreneauxByDay(day: key, creneaux: value)
     }
 }
 

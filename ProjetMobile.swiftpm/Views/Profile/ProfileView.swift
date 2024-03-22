@@ -6,10 +6,11 @@ struct ProfileView: View {
     var body: some View {
         VStack {
             if let user = userViewModel.user {
-                Text("Profil Utilisateur")
+                Text("Mon profil")
                     .font(.title)
                     .fontWeight(.bold)
                     .padding(.bottom, 20)
+                    .foregroundColor(.gray)
                 
                 ProfileItemView(title: "Nom", value: user.lastName ?? "")
                 ProfileItemView(title: "Prénom", value: user.firstName)
@@ -69,7 +70,7 @@ struct ModifyProfileView: View {
     
     var body: some View {
         VStack {
-            Text("Modifier Profil")
+            Text("Modifie ton profil :")
                 .font(.title)
                 .fontWeight(.bold)
                 .padding(.bottom, 20)

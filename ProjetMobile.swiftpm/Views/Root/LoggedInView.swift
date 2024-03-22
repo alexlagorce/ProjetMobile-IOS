@@ -6,22 +6,26 @@ struct LoggedInView: View {
     var body: some View {
         NavigationView {
             TabView {
+                MyFestivalsView()
+                    .tabItem {
+                        Label("Mes festivals", systemImage: "list.bullet.circle")
+                    }
                 DashboardView()
                     .tabItem {
-                        Label("Dashboard", systemImage: "square.grid.2x2")
+                        Label("S'inscrire", systemImage: "square.and.pencil")
                     }
                 ProfileView()
                     .tabItem {
-                        Label("Profile", systemImage: "person")
+                        Label("Mon profil", systemImage: "person")
                     }
             }
-            .navigationBarTitle("Acceuil", displayMode: .inline)
             .navigationBarItems(trailing: Button(action: {
                 // Action à exécuter lorsqu'un bouton est appuyé
                 isLoggedIn = false // Déconnexion en définissant isLoggedIn sur false
             }) {
                 Text("Logout")
                     .fontWeight(.bold)
+                    .foregroundColor(.white)
             })
         }
     }
