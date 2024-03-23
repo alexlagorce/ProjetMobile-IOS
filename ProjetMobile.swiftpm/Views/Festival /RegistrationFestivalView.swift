@@ -11,6 +11,22 @@ struct RegistrationFestivalView: View {
     @State private var isVegetarian = false
     @State private var registrationSuccess = false 
     
+    func onTapGestureAction(idCreneauEspace: Int, 
+                            idCreneau: Int, 
+                            idEspace: Int, 
+                            newCapacity: Int, 
+                            capacityEspaceAnimationJeux: Int, 
+                            espace: Espace) -> (Int, Int, Int, Int, Int, Espace) {
+        creneauViewModel.updateCreneauEspaceCapacity(idCreneauEspace: idCreneauEspace, 
+                                                     newCapacity: newCapacity,
+                                                     idCreneau: idCreneau,
+                                                     idEspace: idEspace,
+                                                     capacityEspaceAnimationJeux: capacityEspaceAnimationJeux,
+                                                     espace: espace)
+        // Return the updated values
+        return (idCreneauEspace, idCreneau, idEspace, newCapacity, capacityEspaceAnimationJeux, espace)
+    }
+    
     var body: some View {
         ScrollView(.vertical) {
             Text("Inscription pour \(festival.name)")
@@ -72,18 +88,38 @@ struct RegistrationFestivalView: View {
                                     
                                     Divider() // Ligne entre les jours
                                     
-                                    ForEach(postes) { poste in
-                                        LazyVGrid(columns: Array(repeating: .init(.flexible()), count: creneauxDay.creneaux.count + 1), alignment: .leading, spacing: 20) {
+                                    ForEach(postes.indices) { index in
+                                        let poste = postes[index]
+                                        VStack(alignment: .leading) {
                                             Text(poste.name)
                                                 .font(.headline)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
+                                                .padding(.bottom, 5)
                                             
-                                            ForEach(creneauxDay.creneaux) { _ in
-                                                Text("") // Vous pouvez ajouter ici des contrôles pour sélectionner les créneaux par poste
-                                                    .font(.subheadline)
-                                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                            HStack(spacing: 30) {
+                                                Spacer().padding(.leading, 20)
+                                                ForEach(creneauxDay.creneaux) { creneau in
+                                                    if let creneauEspace = creneau.creneauEspace.first(where: { $0.idCreneau == creneau.id && $0.espace.name == poste.name }) {
+                                                        CapaciteView(capacite: creneauEspace.currentCapacity, capacityPoste: poste.capacityPoste)
+                                                            .onTapGesture {
+                                                                let (idCreneauEspace, idCreneau, idEspace, currentCapacity, capacityEspaceAnimationJeux, espace) = onTapGestureAction(idCreneauEspace: creneauEspace.idCreneauEspace, 
+                                                                                                                                                                                      idCreneau: creneau.id, 
+                                                                                                                                                                                      idEspace: creneauEspace.idEspace, 
+                                                                                                                                                                                      newCapacity: creneauEspace.currentCapacity + 1, 
+                                                                                                                                                                                      capacityEspaceAnimationJeux: creneauEspace.capacityEspaceAnimationJeux, 
+                                                                                                                                                                                      espace: creneauEspace.espace)
+                                                                    
+                                                                // Utiliser les valeurs renvoyées si nécessaire
+                                                            }
+                                                    } else {
+                                                        Text("-")
+                                                            .font(.subheadline)
+                                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                                    }
+                                                }
                                             }
                                         }
+                                        .padding(.bottom, 10)
                                         Divider() // Ligne entre les postes
                                     }
                                 }
@@ -155,4 +191,20 @@ extension DateFormatter {
         formatter.dateFormat = "EEEE dd MMMM" // "EEEE" pour le jour de la semaine complet, "dd" pour le jour du mois, "MMMM" pour le mois complet
         return formatter
     }()
+}
+
+struct CapaciteView: View {
+    var capacite: Int
+    var capacityPoste: Int
+    
+    var body: some View {
+        let capacityPercentage = Double(capacite) / Double(capacityPoste) * 100.0
+        let displayText = "\(capacite) / \(capacityPoste)"
+        
+        return Text(displayText)
+            .font(.subheadline)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading, 2)
+            .foregroundColor(capacityPercentage >= 80.0 ? .red : .green) // Change la couleur en rouge si la capacité est >= 80%
+    }
 }
